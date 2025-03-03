@@ -22,3 +22,6 @@ dev = [
 migrations = [
     "alembic>=1.14.1",
 ]
+
+[tool.mypy]
+plugins = ['pydantic.mypy']
