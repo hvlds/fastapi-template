@@ -12,6 +12,11 @@ app = FastAPI()
 app.include_router(links.router)
 
 
+@app.get("/")
+def redirect_to_docs():
+    return RedirectResponse(url="/docs")
+
+
 @app.get("/{short_url}")
 def redirect_to_original_url(
     short_url: str, link_service: Annotated[LinkService, Depends(LinkService)]
