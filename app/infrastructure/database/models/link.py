@@ -8,7 +8,6 @@ from app.infrastructure.database.models.base import Base
 
 class Link(Base):
     __tablename__ = "link"
-    __table_args__ = {"schema": "link_shortener"}
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     url: Mapped[str]
