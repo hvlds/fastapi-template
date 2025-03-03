@@ -1,17 +1,20 @@
-# FastAPI Template
+# 🚀 FastAPI Template
 
-An opinionated template for a FastAPI project wit PostgreSQL, SQLAlchemy and uv as the package manager.
-This projects implements a basic link shortener API.
+An opinionated template for a FastAPI project with PostgreSQL, SQLAlchemy, and `uv` as the package manager.
 
-## ENV File
+## 🎉 Demo Project
 
-Create a `.env` file in the root of the project and add the following 
-(values also defined in `docker-compose.yml`):
+This project implements a basic link shortener API. It allows you to create a short link for a given URL and redirect to the original URL using the short link.
 
-```bash
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_NAME=template_db
-DATABASE_USER=template_user
-DATABASE_PASSWORD=TemplateDeveloperPassword
-```
+Optionally, you can add an expiration date to the short link, which will make it invalid after the given date.
+
+## 🛠️ Setup
+
+This project can be started using Docker Compose or by starting PostgreSQL and the controller locally.
+
+### 🐳 Docker Compose
+
+A general build starts first the PostgreSQL container, then it applies the Alembic migrations, and finally starts the FastAPI Controller.
+
+```shell
+docker-compose up --build
