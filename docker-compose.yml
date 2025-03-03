@@ -7,6 +7,18 @@ services:
       - POSTGRES_PASSWORD=TemplateDeveloperPassword
       - POSTGRES_USER=template_user
       - POSTGRES_DB=template_db
+  migrations:
+    build:
+      context: .
+      dockerfile: dockerfiles/Migrations.Dockerfile
+    depends_on:
+      - database
+    environment:
+      - DATABASE_HOST=database
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=template_db
+      - DATABASE_USER=template_user
+      - DATABASE_PASSWORD=TemplateDeveloperPassword
   app:
     build:
       context: .
@@ -15,6 +27,13 @@ services:
       - 8000:8000
     depends_on:
       - database
+      - migrations
+    environment:
+      - DATABASE_HOST=database
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=template_db
+      - DATABASE_USER=template_user
+      - DATABASE_PASSWORD=TemplateDeveloperPassword
 
 volumes:
   db:
