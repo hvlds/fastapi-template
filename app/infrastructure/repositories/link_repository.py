@@ -18,6 +18,11 @@ class LinkRepository:
         result = self.session.execute(stmt).scalars().all()
         return [link for link in result]
 
+    def get_link_by_short_url(self, short_url: str) -> Link | None:
+        stmt = select(Link).where(Link.short_url == short_url)
+        result = self.session.execute(stmt).scalar()
+        return result
+
     def create_link(
         self, url: str, short_url: str, live_until: datetime | None
     ) -> Link:
