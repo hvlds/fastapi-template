@@ -4,7 +4,7 @@ from fastapi import FastAPI, Depends
 from starlette.responses import RedirectResponse
 
 from app.routers import links
-from app.services.exceptions import LinkNotFound
+from app.services.exceptions import LinkNotFound, LinkExpired
 from app.services.link_service import LinkService
 
 app = FastAPI()
@@ -26,4 +26,6 @@ def redirect_to_original_url(
         redirect_response = RedirectResponse(url=original_url)
         return redirect_response
     except LinkNotFound as e:
-        return {"error": str(e)}
+        return {"error": str(e)}, 404
+    except LinkExpired as e:
+        return {"error": str(e)}, 410

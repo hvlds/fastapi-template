@@ -1,5 +1,6 @@
 import string
 import random
+from datetime import datetime, UTC
 from typing import Annotated
 from uuid import uuid4
 
@@ -9,7 +10,7 @@ from app.contracts.create_link_api import CreateLinkApi
 from app.contracts.link_api import LinkApi
 from app.infrastructure.repositories.link_repository import LinkRepository
 from app.mappers.link_api_mapper import LinkApiMapper
-from app.services.exceptions import LinkNotFound
+from app.services.exceptions import LinkNotFound, LinkExpired
 
 
 class LinkService:
@@ -23,9 +24,13 @@ class LinkService:
         return [LinkApiMapper.map(db_link) for db_link in all_db_links]
 
     def get_original_link(self, short_url: str) -> str:
+        now = datetime.now(tz=UTC)
         db_link = self.link_repository.get_link_by_short_url(short_url)
         if not db_link:
             raise LinkNotFound(short_url)
+
+        if db_link.live_until and db_link.live_until < now:
+            raise LinkExpired(short_url)
 
         return db_link.url
 
