@@ -1,14 +1,7 @@
 from fastapi import FastAPI
 
+from app.routers import links
 
 app = FastAPI()
 
-
-@app.get("/users")
-def get_users() -> dict:
-    return {
-        "users": [
-            {"username": "Alice"},
-            {"username": "Bob"},
-        ]
-    }
+app.include_router(links.router)
