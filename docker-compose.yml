@@ -1,0 +1,23 @@
+services:
+  database:
+    image: postgres:17
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=TemplateDeveloperPassword
+      - POSTGRES_USER=template_user
+      - POSTGRES_DB=template_db
+  app:
+    build:
+      context: .
+      dockerfile: dockerfiles/Controller.Dockerfile
+    ports:
+      - 8000:8000
+    depends_on:
+      - database
+
+volumes:
+  db:
+    driver: local
+  cache:
+    driver: local
