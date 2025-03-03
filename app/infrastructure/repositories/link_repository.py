@@ -1,3 +1,4 @@
+from datetime import datetime, UTC
 from typing import Annotated
 
 from fastapi import Depends
@@ -16,3 +17,16 @@ class LinkRepository:
         stmt = select(Link)
         result = self.session.execute(stmt).scalars().all()
         return [link for link in result]
+
+    def create_link(
+        self, url: str, short_url: str, live_until: datetime | None
+    ) -> Link:
+        new_link = Link(
+            url=url,
+            short_url=short_url,
+            live_until=live_until,
+            created_at=datetime.now(tz=UTC),
+        )
+        self.session.add(new_link)
+        self.session.commit()
+        return new_link
