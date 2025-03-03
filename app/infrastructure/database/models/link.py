@@ -12,6 +12,6 @@ class Link(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     url: Mapped[str]
-    short_url: Mapped[str] = mapped_column(String, index=True)
+    short_url: Mapped[str] = mapped_column(String, unique=True, index=True)
     created_at: Mapped[datetime]
     live_until: Mapped[datetime | None]
