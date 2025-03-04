@@ -1,15 +1,29 @@
 from typing import Annotated
 
-from fastapi import FastAPI, Depends
+from fastapi import Depends
+from fastapi import FastAPI
 from starlette.responses import RedirectResponse
 
-from app.routers import links
+from app.contracts.create_link_api import CreateLinkApi
+from app.contracts.link_api import LinkApi
 from app.services.exceptions import LinkNotFound, LinkExpired
 from app.services.link_service import LinkService
 
 app = FastAPI()
 
-app.include_router(links.router)
+
+@app.get("/links")
+def get_links(
+    link_service: Annotated[LinkService, Depends(LinkService)],
+) -> list[LinkApi]:
+    return link_service.get_links()
+
+
+@app.post("/links")
+def create_link(
+    new_link: CreateLinkApi, link_service: Annotated[LinkService, Depends(LinkService)]
+) -> LinkApi:
+    return link_service.create_link(new_link)
 
 
 @app.get("/")
