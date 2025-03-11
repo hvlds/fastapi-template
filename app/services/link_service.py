@@ -19,13 +19,13 @@ class LinkService:
     ):
         self.link_repository = link_repository
 
-    def get_links(self) -> list[LinkApi]:
-        all_db_links = self.link_repository.get_links()
+    async def get_links(self) -> list[LinkApi]:
+        all_db_links = await self.link_repository.get_links()
         return [LinkApiMapper.map(db_link) for db_link in all_db_links]
 
-    def get_original_link(self, short_url: str) -> str:
+    async def get_original_link(self, short_url: str) -> str:
         now = datetime.now(tz=UTC)
-        db_link = self.link_repository.get_link_by_short_url(short_url)
+        db_link = await self.link_repository.get_link_by_short_url(short_url)
         if not db_link:
             raise LinkNotFound(short_url)
 
@@ -34,8 +34,8 @@ class LinkService:
 
         return db_link.url
 
-    def create_link(self, new_link: CreateLinkApi) -> LinkApi:
-        db_link = self.link_repository.create_link(
+    async def create_link(self, new_link: CreateLinkApi) -> LinkApi:
+        db_link = await self.link_repository.create_link(
             url=new_link.url.unicode_string(),
             short_url=LinkService._generate_short_id(seed=str(uuid4())),
             live_until=new_link.live_until,

@@ -13,17 +13,17 @@ app = FastAPI()
 
 
 @app.get("/links")
-def get_links(
+async def get_links(
     link_service: Annotated[LinkService, Depends(LinkService)],
 ) -> list[LinkApi]:
-    return link_service.get_links()
+    return await link_service.get_links()
 
 
 @app.post("/links")
-def create_link(
+async def create_link(
     new_link: CreateLinkApi, link_service: Annotated[LinkService, Depends(LinkService)]
 ) -> LinkApi:
-    return link_service.create_link(new_link)
+    return await link_service.create_link(new_link)
 
 
 @app.get("/")
@@ -32,11 +32,11 @@ def redirect_to_docs():
 
 
 @app.get("/{short_url}")
-def redirect_to_original_url(
+async def redirect_to_original_url(
     short_url: str, link_service: Annotated[LinkService, Depends(LinkService)]
 ):
     try:
-        original_url = link_service.get_original_link(short_url)
+        original_url = await link_service.get_original_link(short_url)
         redirect_response = RedirectResponse(url=original_url)
         return redirect_response
     except LinkNotFound as e:

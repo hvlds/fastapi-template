@@ -1,14 +1,16 @@
-from app.infrastructure.database.models.link import Link
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.infrastructure.database.models.link import Link
 
 
-def test_create_link_works(test_client, test_db_session):
+async def test_create_link_works(test_client, test_db_session: AsyncSession):
     # GIVEN
     new_url = "https://www.example.com/"
 
     # Check that the link does not exist
     exists_stmt = select(Link).where(Link.url == new_url)
-    result = test_db_session.execute(exists_stmt).fetchone()
+    result = (await test_db_session.execute(exists_stmt)).fetchone()
     assert result is None
 
     # WHEN
@@ -21,7 +23,7 @@ def test_create_link_works(test_client, test_db_session):
     assert link["created_at"] is not None
 
     # Check that the link exists
-    result = test_db_session.execute(exists_stmt).fetchone()
+    result = (await test_db_session.execute(exists_stmt)).fetchone()
     assert result is not None
     db_link = result[0]
     assert db_link.url == new_url

@@ -3,27 +3,27 @@ from typing import Annotated
 
 from fastapi import Depends
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.infrastructure.database.models.link import Link
 from app.infrastructure.database.utils import get_db
 
 
 class LinkRepository:
-    def __init__(self, db_session: Annotated[Session, Depends(get_db)]):
+    def __init__(self, db_session: Annotated[AsyncSession, Depends(get_db)]):
         self.session = db_session
 
-    def get_links(self) -> list[Link]:
+    async def get_links(self) -> list[Link]:
         stmt = select(Link)
-        result = self.session.execute(stmt).scalars().all()
+        result = (await self.session.execute(stmt)).scalars().all()
         return [link for link in result]
 
-    def get_link_by_short_url(self, short_url: str) -> Link | None:
+    async def get_link_by_short_url(self, short_url: str) -> Link | None:
         stmt = select(Link).where(Link.short_url == short_url)
-        result = self.session.execute(stmt).scalar()
+        result = (await self.session.execute(stmt)).scalar()
         return result
 
-    def create_link(
+    async def create_link(
         self, url: str, short_url: str, live_until: datetime | None
     ) -> Link:
         new_link = Link(
@@ -33,5 +33,5 @@ class LinkRepository:
             created_at=datetime.now(tz=UTC),
         )
         self.session.add(new_link)
-        self.session.commit()
+        await self.session.commit()
         return new_link

@@ -10,14 +10,16 @@ dependencies = [
     "psycopg-binary>=3.2.5",
     "pydantic>=2.10.6",
     "pydantic-settings>=2.8.1",
-    "sqlalchemy>=2.0.38",
+    "sqlalchemy[asyncio]>=2.0.38",
     "uvicorn>=0.34.0",
 ]
 
 [dependency-groups]
 dev = [
+    "aiosqlite>=0.21.0",
     "mypy>=1.15.0",
     "pytest>=8.3.5",
+    "pytest-asyncio>=0.25.3",
     "pytest-xdist>=3.6.1",
     "ruff>=0.9.9",
 ]
